@@ -1,0 +1,181 @@
+﻿schema {
+  query: Query
+  mutation: Mutation
+  subscription: Subscription
+}
+
+type Level {
+  Expert: Int
+  Junior: Int
+  Principal: Int
+  Senior: Int
+  Specialist: Int
+}
+
+type Mutation {
+  createProfile(input: CreateProfileInput!): Profile
+  createSkillProfile(input: CreateSkillProfileInput!): SkillProfile
+  deleteProfile(input: DeleteProfileInput!): Profile
+  deleteSkillProfile(input: DeleteSkillProfileInput!): SkillProfile
+  updateProfile(input: UpdateProfileInput!): Profile
+  updateSkillProfile(input: UpdateSkillProfileInput!): SkillProfile
+}
+
+type Profile {
+  Cluster: String
+  Description: String
+  Family: String
+  Name: String!
+  ProfileID: String!
+  skills: [Skill]
+}
+
+type ProfileConnection {
+  items: [Profile]
+  nextToken: String
+}
+
+type Query {
+  getProfile(ProfileID: String!): Profile
+  getSkillProfile(ID: String!, ProfileID: String!): SkillProfile
+  listProfiles(filter: TableProfileFilterInput, limit: Int, nextToken: String): ProfileConnection
+  listSkillProfiles(filter: TableSkillProfileFilterInput, limit: Int, nextToken: String): SkillProfileConnection
+  queryProfilesByIDIndex(ID: String!, after: String, first: Int): ProfileConnection
+  querySkillProfilesByIDIndex(ID: String!, after: String, first: Int): SkillProfileConnection
+}
+
+type Skill {
+  Category: String
+  Description: String
+  ID: ID!
+  Levels: Level
+  ProfileID: String!
+  SkillName: String!
+}
+
+type SkillProfile {
+  Category: String
+  Description: String
+  ID: String!
+  Levels: Level
+  ProfileID: String!
+  SkillName: String!
+}
+
+type SkillProfileConnection {
+  items: [SkillProfile]
+  nextToken: String
+}
+
+type Subscription {
+  onCreateProfile(ID: String, ProfileID: String): Profile @aws_subscribe(mutations : ["createProfile"])
+  onCreateSkillProfile(Category: String, Description: String, ID: String, Name: String, ProfileID: String): SkillProfile @aws_subscribe(mutations : ["createSkillProfile"])
+  onDeleteProfile(ID: String, ProfileID: String): Profile @aws_subscribe(mutations : ["deleteProfile"])
+  onDeleteSkillProfile(Category: String, Description: String, ID: String, Name: String, ProfileID: String): SkillProfile @aws_subscribe(mutations : ["deleteSkillProfile"])
+  onUpdateProfile(ID: String, ProfileID: String): Profile @aws_subscribe(mutations : ["updateProfile"])
+  onUpdateSkillProfile(Category: String, Description: String, ID: String, Name: String, ProfileID: String): SkillProfile @aws_subscribe(mutations : ["updateSkillProfile"])
+}
+
+input CreateProfileInput {
+  ProfileID: String!
+}
+
+input CreateSkillProfileInput {
+  Category: String
+  Description: String
+  ID: String!
+  Name: String!
+  ProfileID: String!
+}
+
+input DeleteProfileInput {
+  ProfileID: String!
+}
+
+input DeleteSkillProfileInput {
+  ID: String!
+  ProfileID: String!
+}
+
+input TableBooleanFilterInput {
+  eq: Boolean
+  ne: Boolean
+}
+
+input TableFloatFilterInput {
+  between: [Float]
+  contains: Float
+  eq: Float
+  ge: Float
+  gt: Float
+  le: Float
+  lt: Float
+  ne: Float
+  notContains: Float
+}
+
+input TableIDFilterInput {
+  beginsWith: ID
+  between: [ID]
+  contains: ID
+  eq: ID
+  ge: ID
+  gt: ID
+  le: ID
+  lt: ID
+  ne: ID
+  notContains: ID
+}
+
+input TableIntFilterInput {
+  between: [Int]
+  contains: Int
+  eq: Int
+  ge: Int
+  gt: Int
+  le: Int
+  lt: Int
+  ne: Int
+  notContains: Int
+}
+
+input TableProfileFilterInput {
+  Cluster: TableStringFilterInput
+  Description: TableStringFilterInput
+  Family: TableStringFilterInput
+  Name: TableStringFilterInput
+  ProfileID: TableStringFilterInput
+}
+
+input TableSkillProfileFilterInput {
+  Category: TableStringFilterInput
+  Description: TableStringFilterInput
+  ID: TableStringFilterInput
+  ProfileID: TableStringFilterInput
+  SkillName: TableStringFilterInput
+}
+
+input TableStringFilterInput {
+  beginsWith: String
+  between: [String]
+  contains: String
+  eq: String
+  ge: String
+  gt: String
+  le: String
+  lt: String
+  ne: String
+  notContains: String
+}
+
+input UpdateProfileInput {
+  ProfileID: String!
+}
+
+input UpdateSkillProfileInput {
+  Category: String
+  Description: String
+  ID: String!
+  Name: String
+  ProfileID: String!
+}

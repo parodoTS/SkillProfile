@@ -1,0 +1,25 @@
+##$util.toJson($context.result)
+#if($context.result.items.size() == 0)
+  $utils.error("NotFound", "NotFound");
+#else
+  #set ($parent = {})
+  $util.qr($parent.put("items", []))
+  #set ($order ={})
+  #foreach($item in $context.result.items)
+    #if($item.ID.startsWith("0"))
+      #if($order.skills)
+        $util.qr($parent.items.add($order))
+      #end
+      #set ($order = $item)
+      $util.qr($order.put("skills", []))
+    #else
+      #if($item.ID.startsWith("S"))
+        #if($item.ProfileID == $order.ID)
+          $util.qr($order.skills.add($item))
+        #end
+    #end
+  #end
+#end
+$util.qr($parent.items.add($order))
+$utils.toJson($parent)
+#end

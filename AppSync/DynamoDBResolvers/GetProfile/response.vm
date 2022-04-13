@@ -1,0 +1,16 @@
+#if($context.result.items.size() == 0)
+  $utils.error("NotFound", "NotFound");
+#else
+  #set ($order = {})
+  #foreach($item in $context.result.items)
+    #if($item.ID.startsWith("0"))
+      #set ($order = $item)
+      $util.qr($order.put("skills", []))
+    #else
+      #if($item.ID.startsWith("S"))
+        $util.qr($order.skills.add($item))
+    #end
+  #end
+#end
+$utils.toJson($order)
+#end

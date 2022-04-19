@@ -1,0 +1,15 @@
+## getProfilesWithSkill - request mapping
+{
+  "version": "2018-05-29",
+  "operation": "Query",
+  "index":"ID-index",
+  "query" : {
+    "expression": "#ID = :ID",
+    "expressionNames" : {
+      "#ID": "ID"
+    },
+    "expressionValues" : {
+      ":ID": $util.dynamodb.toStringJson(${ctx.args.ID})
+    }
+  }
+}

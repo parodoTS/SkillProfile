@@ -1,0 +1,15 @@
+Some usefull links:
+
+APPSYNC + DYNAMO + VTL RESOLVERS:
+
+https://docs.aws.amazon.com/es_es/appsync/latest/devguide/resolver-util-reference.html
+
+https://benoitboure.com/how-to-use-dynamodb-single-table-design-with-appsync
+
+https://benoitboure.com/how-to-handle-many-to-many-relations-in-appsync
+
+https://docs.aws.amazon.com/appsync/latest/devguide/resolver-mapping-template-reference-dynamodb.html#aws-appsync-resolver-mapping-template-reference-dynamodb-batch-get-item
+
+https://docs.aws.amazon.com/appsync/latest/devguide/pipeline-resolvers.html
+
+https://docs.aws.amazon.com/appsync/latest/devguide/tutorial-dynamodb-resolvers.html

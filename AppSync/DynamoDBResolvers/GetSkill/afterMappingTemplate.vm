@@ -1,0 +1,2 @@
+## getProfiles - after mapping
+$util.toJson($ctx.result)

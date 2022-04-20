@@ -1,35 +1,67 @@
+import boto3
 import json
 from collections import OrderedDict
 from itertools import islice
 from openpyxl import load_workbook
 
-# Open the workbook and select a worksheet
-wb = load_workbook('/content/data.xlsm')    ##file name here
-sheet = wb['Skill Profiles']
 
-# List to hold dictionaries
-skill_list = []
+def lambda_handler(event, context):
+    
+    #  PART 1: Connect to S3 and download the EXCEL file (to /tmp/ in Lambda)
+    
+    s3_client = boto3.client("s3")
+    S3_BUCKET_NAME = 'pcmt25-pipe'  #'skillprofilebucket'
+    object_key = "Copia de 2022-02-17_Skillprofil_Matrix_V4.7_YAM.xlsm"  
+    
+    file_content = s3_client.download_file(S3_BUCKET_NAME, object_key,'/tmp/data.xlsm')
+    
+    #  PART 2: Parse data from EXCEL file to Python list using openpyxl
 
-# Iterate through each row in worksheet and fetch values into dict
-for row in islice(sheet.values, 11, sheet.max_row):
-    skill = OrderedDict()
-    skill['Skill-Profiles'] = row[4]
-    skill['Skill-ID'] = row[5]
-    skill['Skill-Category'] = row[6]
-    skill['Skillname EN'] = row[9]
-    skill['Skill Description EN'] = row[10]
-    Levels = OrderedDict()
-    Levels['Junior'] = row[11]
-    Levels['Specialist'] = row[12]
-    Levels['Expert'] = row[13]
-    Levels['Senior'] = row[14]
-    Levels['Principal'] = row[15]
-    skill['Levels']=Levels
-    skill_list.append(skill)
-
-# Serialize the list of dicts to JSON
-j = json.dumps(cars_list)
-
-#Write to file
-with open('data.json', 'w') as f:
-    f.write(j)
+    wb = load_workbook('/tmp/data.xlsm')
+    
+    sheet1 = wb['Mapping SSP']  #Sheet with Profiles' info
+    
+    profile_list = []
+    diccionario = {}
+    
+    for row in islice(sheet1.values, 3, (sheet1.max_row)-1):
+        profile = OrderedDict()
+        profile['ProfileID'] = row[1]
+        profile['ID'] = row[1]
+        profile['Name'] = row[2]
+        profile['Family'] = row[16]
+        profile['Cluster'] = row[17]
+        profile['Description'] = row[4]
+        profile_list.append(profile)
+        diccionario[row[2].upper()]=row[1]
+    
+    
+    sheet2 = wb['Skill Profiles']   #Sheet with Skills' info
+    
+    skill_list = []
+    
+    for row in islice(sheet2.values, 11, (sheet2.max_row)-1):
+        skill = OrderedDict()
+        skill['ProfileID'] = diccionario[row[4].upper()]
+        skill['ID'] = row[5]
+        skill['Category'] = row[6]
+        skill['SkillName'] = row[9]
+        skill['Description'] = row[10]
+        Levels = OrderedDict()
+        Levels['Junior'] = row[11]
+        Levels['Specialist'] = row[12]
+        Levels['Expert'] = row[13]
+        Levels['Senior'] = row[14]
+        Levels['Principal'] = row[15]
+        skill['Levels']=Levels
+        skill_list.append(skill)
+    
+    #  PART 3: Connect to DynamoDB and upload the data to the table
+    
+    dynamodb = boto3.resource('dynamodb', region_name='eu-west-1')
+    table = dynamodb.Table('SkillProfile')
+    
+    for profile in profile_list:
+        table.put_item(Item=profile)
+    for skill in skill_list:
+        table.put_item(Item=skill)

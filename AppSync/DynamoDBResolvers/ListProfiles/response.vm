@@ -3,6 +3,7 @@
   $utils.error("NotFound", "NotFound");
 #else
   #set ($parent = {})
+  $util.qr($parent.put("nextToken", $ctx.result.nextToken))
   $util.qr($parent.put("items", []))
   #set ($order ={})
   #foreach($item in $context.result.items)
@@ -13,7 +14,7 @@
       #set ($order = $item)
       $util.qr($order.put("skills", []))
     #else
-      #if($item.ID.startsWith("S"))
+      #if(!$item.ID.contains("-"))
         #if($item.ProfileID == $order.ID)
           $util.qr($order.skills.add($item))
         #end

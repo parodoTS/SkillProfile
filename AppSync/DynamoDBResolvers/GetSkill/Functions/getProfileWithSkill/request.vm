@@ -3,6 +3,8 @@
   "version": "2018-05-29",
   "operation": "Query",
   "index":"ID-index",
+  "limit": 100, ##$util.toJson($limit),
+  "nextToken": $util.toJson($ctx.args.nextToken),
   "query" : {
     "expression": "#ID = :ID",
     "expressionNames" : {

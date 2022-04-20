@@ -7,7 +7,7 @@
       #set ($order = $item)
       $util.qr($order.put("skills", []))
     #else
-      #if($item.ID.startsWith("S"))
+      #if(!$item.ID.contains("-"))
         $util.qr($order.skills.add($item))
     #end
   #end

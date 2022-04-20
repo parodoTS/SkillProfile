@@ -65,3 +65,4 @@ def lambda_handler(event, context):
         table.put_item(Item=profile)
     for skill in skill_list:
         table.put_item(Item=skill)
+

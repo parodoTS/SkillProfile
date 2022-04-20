@@ -1,4 +1,4 @@
-﻿schema {
+schema {
   query: Query
   mutation: Mutation
   subscription: Subscription
@@ -14,11 +14,11 @@ type Level {
 
 type Mutation {
   createProfile(input: CreateProfileInput!): Profile
-  createSkillProfile(input: CreateSkillProfileInput!): SkillProfile
+  createSkill(input: CreateSkillInput!): SkillProfile
   deleteProfile(input: DeleteProfileInput!): Profile
-  deleteSkillProfile(input: DeleteSkillProfileInput!): SkillProfile
+  deleteSkill(input: DeleteSkillInput!): SkillProfile
   updateProfile(input: UpdateProfileInput!): Profile
-  updateSkillProfile(input: UpdateSkillProfileInput!): SkillProfile
+  updateSkill(input: UpdateSkillInput!): SkillProfile
 }
 
 type Profile {
@@ -35,13 +35,20 @@ type ProfileConnection {
   nextToken: String
 }
 
+type ProfileSkill {
+  Cluster: String
+  Description: String
+  Family: String
+  Levels: Level
+  Name: String!
+  ProfileID: String!
+}
+
 type Query {
   getProfile(ProfileID: String!): Profile
-  getSkillProfile(ID: String!, ProfileID: String!): SkillProfile
+  # #queryProfilesByIDIndex(ID: String!, first: Int, after: String): ProfileConnection
+  getSkill(ID: String!, nextToken: String): SkillProfile
   listProfiles(filter: TableProfileFilterInput, limit: Int, nextToken: String): ProfileConnection
-  listSkillProfiles(filter: TableSkillProfileFilterInput, limit: Int, nextToken: String): SkillProfileConnection
-  queryProfilesByIDIndex(ID: String!, after: String, first: Int): ProfileConnection
-  querySkillProfilesByIDIndex(ID: String!, after: String, first: Int): SkillProfileConnection
 }
 
 type Skill {
@@ -57,9 +64,9 @@ type SkillProfile {
   Category: String
   Description: String
   ID: String!
-  Levels: Level
-  ProfileID: String!
   SkillName: String!
+  nextToken: String
+  profiles: [ProfileSkill]
 }
 
 type SkillProfileConnection {
@@ -69,18 +76,18 @@ type SkillProfileConnection {
 
 type Subscription {
   onCreateProfile(ID: String, ProfileID: String): Profile @aws_subscribe(mutations : ["createProfile"])
-  onCreateSkillProfile(Category: String, Description: String, ID: String, Name: String, ProfileID: String): SkillProfile @aws_subscribe(mutations : ["createSkillProfile"])
+  onCreateSkill(Category: String, Description: String, ID: String, Name: String, ProfileID: String): SkillProfile @aws_subscribe(mutations : ["createSkill"])
   onDeleteProfile(ID: String, ProfileID: String): Profile @aws_subscribe(mutations : ["deleteProfile"])
-  onDeleteSkillProfile(Category: String, Description: String, ID: String, Name: String, ProfileID: String): SkillProfile @aws_subscribe(mutations : ["deleteSkillProfile"])
+  onDeleteSkill(Category: String, Description: String, ID: String, Name: String, ProfileID: String): SkillProfile @aws_subscribe(mutations : ["deleteSkill"])
   onUpdateProfile(ID: String, ProfileID: String): Profile @aws_subscribe(mutations : ["updateProfile"])
-  onUpdateSkillProfile(Category: String, Description: String, ID: String, Name: String, ProfileID: String): SkillProfile @aws_subscribe(mutations : ["updateSkillProfile"])
+  onUpdateSkill(Category: String, Description: String, ID: String, Name: String, ProfileID: String): SkillProfile @aws_subscribe(mutations : ["updateSkill"])
 }
 
 input CreateProfileInput {
   ProfileID: String!
 }
 
-input CreateSkillProfileInput {
+input CreateSkillInput {
   Category: String
   Description: String
   ID: String!
@@ -92,7 +99,7 @@ input DeleteProfileInput {
   ProfileID: String!
 }
 
-input DeleteSkillProfileInput {
+input DeleteSkillInput {
   ID: String!
   ProfileID: String!
 }
@@ -147,7 +154,7 @@ input TableProfileFilterInput {
   ProfileID: TableStringFilterInput
 }
 
-input TableSkillProfileFilterInput {
+input TableSkillFilterInput {
   Category: TableStringFilterInput
   Description: TableStringFilterInput
   ID: TableStringFilterInput
@@ -172,10 +179,11 @@ input UpdateProfileInput {
   ProfileID: String!
 }
 
-input UpdateSkillProfileInput {
+input UpdateSkillInput {
   Category: String
   Description: String
   ID: String!
   Name: String
   ProfileID: String!
 }
+

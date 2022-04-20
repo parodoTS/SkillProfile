@@ -9,14 +9,15 @@
 
 #if($context.args.filter)
   #set($variable=$util.parseJson($util.transform.toDynamoDBFilterExpression($ctx.args.filter)))
-  #set($variable.expression = $variable.expression + " or contains(#ID, :ID)" )
+  #set($variable.expression = $variable.expression + " or NOT contains(#ID, :ID)" )
   $util.qr($variable.expressionNames.put("#ID", "ID"))
-  $util.qr($variable.expressionValues.put(":ID",{"S":"S"}))
+  $util.qr($variable.expressionValues.put(":ID",{"S":"-"}))
+#end
 
 {
   "version": "2017-02-28",
   "operation": "Scan",
-  "filter": $util.toJson($variable),##$util.transform.toDynamoDBFilterExpression($variable),
-  "limit": $util.defaultIfNull($ctx.args.limit, 20),
+  "filter": $util.toJson($variable),
+  "limit": $util.defaultIfNull($ctx.args.limit, 3200),
   "nextToken": $util.toJson($util.defaultIfNullOrEmpty($ctx.args.nextToken, null)),
 }

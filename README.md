@@ -188,7 +188,7 @@ Three queries are allowed:
 ## Resolvers
 As we have said, we are using a single table DynamoDB as datasource, and the connection to it is implemented using resolvers written in VTL.
 
- **1. getProfile:**
+ ### 1. getProfile:
 This query has been implemented using DynamoDB Query method. Taking advantage of the single table design we can run this query using only one operation to the database. To return one profile and the skills asociated to it, we simply query using the ProfileID (PK, because we have stored our skills with this field pointing their profile). In order to not overfetch the response and get the skills if the client did not ask for them; in the request template we start by checking if the skills field were requested, if not we query for just the profile (adding the ID field to the query, which must be the same as the ProfileID for the profiles).
 
     #if(!$ctx.info.selectionSetList.contains("skills"))
@@ -216,7 +216,7 @@ In the response template we need to reorganize our response data to match the sc
     #end
 We iterate through the items in the response and if they are skills (ID different from ProfileID) we add them to the profile.
 
- **2. listProfiles:**
+ ### 2. listProfiles:
   In this query we use the Scan method of DynamoDB, which retrieves all items in the table (consumes more capacity) and allows us to filter through them; all in one sigle operation as the getProfile query.
   First, in the request template, we check if some filter were used, in that case we add to the filter the expression that allows skills to be retrieve too (OR "is a skill").
 
@@ -232,7 +232,7 @@ Due to the DynamoDB limitations (Scan/Query operation can only retrieve up to 1M
 
 In the response template we reorganize the data in a similar way as in the getProfile.
 
- **3. getSkill** 
+ ### 3. getSkill
 This query operation differs from the previous ones because it uses two call to the databases, thats why instead of using directly one resolver, we build a Pipeline resolver composed of 2 functions (each one is like a single resolver that pass the results to the next one).
 
 The first function is **getProfilesWithSkill**, which make a first request using Query operation to retrieve all occurences of a skill. To accomplish that we set up a secondary index in DynamoDB on the field ID. 

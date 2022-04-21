@@ -1,5 +1,6 @@
 import boto3
 import json
+import urllib.parse
 from collections import OrderedDict
 from itertools import islice
 from openpyxl import load_workbook
@@ -11,7 +12,7 @@ def lambda_handler(event, context):
     
     s3_client = boto3.client("s3")
     S3_BUCKET_NAME = 'skillprofilebucket'
-    object_key = "Copia de 2022-02-17_Skillprofil_Matrix_V4.7_YAM.xlsm"  
+    object_key = urllib.parse.unquote_plus(event['Records'][0]['s3']['object']['key'], encoding='utf-8') 
     
     file_content = s3_client.download_file(S3_BUCKET_NAME, object_key,'/tmp/data.xlsm')
     

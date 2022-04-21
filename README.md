@@ -365,7 +365,7 @@ The pipeline also have an after mapping template in which we add the nextToken f
       Name
     }}}
 
-  **Response:**
+  **Response**
 
 	{"data": {
     "getSkill": {

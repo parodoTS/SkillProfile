@@ -1,16 +1,16 @@
 #if($context.result.items.size() == 0)
   $utils.error("NotFound", "NotFound");
 #else
-  #set ($order = {})
+  #set ($profile = {})
   #foreach($item in $context.result.items)
-    #if($item.ID.startsWith("0"))
-      #set ($order = $item)
-      $util.qr($order.put("skills", []))
+    #if($item.ID == $item.ProfileID)
+      #set ($profile = $item)
+      $util.qr($profile.put("skills", []))
     #else
-      #if(!$item.ID.contains("-"))
-        $util.qr($order.skills.add($item))
+      #if($item.ID != $item.ProfileID)
+        $util.qr($profile.skills.add($item))
     #end
   #end
 #end
-$utils.toJson($order)
+$utils.toJson($profile)
 #end

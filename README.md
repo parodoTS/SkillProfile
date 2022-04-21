@@ -1,55 +1,82 @@
-# SkillProfile
+#  SkillProfile (Appsync+DynamoDB)
 
 
-SkillProfile+GraphQL(Appsync+Dynamo)
+In this project we are going to implement a GraphQL API to query data from an EXCEL file. All this backend implementation is developed and hosted using AWS services. It is made up of the following parts:
+
+ 1. We upload an EXCEL file containing all data we want to a S3 bucket.
+ 2. A Lambda function is triggered, it parse the data on the file and upload it to a DynamoDB database.
+ 3. We used AppSync to deploy the GraphQL API that will receive requests and reply to them, querying the database.
+ 
+ The following diagram shows the implementation:
 
 ![SkillProfile drawio](https://user-images.githubusercontent.com/100789868/164406013-a1cbf3a1-95ae-4d21-88a7-65a1ac9f671d.png)
+
+>All this implementation has been build up trying to get advantage of a serverless architecture
+# Data
+We will start disscussing briefly the EXCEL file containing the data. This file got the ".xlsm" extension and it is composed of some sheets, each one with different data entities all about job profiles, the neccesary skills for each one, and the levels of kwoledge on these skills to reach a category (Junior, Senior...) on that specific profile.
+
+It looks like:
+
+**Skills sheet:**
 ![image](https://user-images.githubusercontent.com/100789868/164491226-c3dcb5e5-3f68-47db-840b-c0e9a9a9b0c4.png)
+**Profiles sheet:**
 ![image](https://user-images.githubusercontent.com/100789868/164490558-b0e0c5a6-4457-43b1-a0df-24e2d406dae0.png)
-![image](https://user-images.githubusercontent.com/100789868/164500243-ea986220-3eea-4d68-aa06-93bbf16fbb68.png)
 
+We upload this EXCEL file without any modifications to a S3 bucket.
 
-# SkillProfile+GraphQL(Appsync+Dynamo)
-### DynamoDB:
-Amazon DynamoDB is a fully managed, serverless, key-value NoSQL database designed to run high-performance applications at any scale. **DynamoDB offers built-in security, continuous backups, automated multi-Region replication, in-memory caching, and data export tools.**
+The next step we are going to describe is the set up and design of the DynamoDB database in order to store all this data.
 
+#  DynamoDB
 
-# Design DynamoDB table:
-
- DynamoDB is a schema-less database that only requires a table name and primary key when creating the table.
-
-
-## Configure that it has auto scalling. To improve reading and writing.
-
-
-The **read/write** capacity mode controls how you are charged for read and write performance and how you manage capacity.
-### READ
-**Read Capacity Auto Scaling**
-Activated
-**Provisioned Read Capacity Units**
-1
-**Provisioned interval for reads**
-1 - 20
-**Reading Capacity Utilization Target**
-70%
-### WRITE
-**Write Capacity Auto Scaling**
-Activated
-**Provisioned Write Capacity Units**
-1
-**Provisioned interval for writes**
-1 - 20
-**Write Capacity Utilization Target**
-70%
+> Amazon DynamoDB is a fully managed, serverless, key-value NoSQL
+> database designed to run high-performance applications at any scale.
+> **DynamoDB offers built-in security, continuous backups, automated multi-Region replication, in-memory caching, and data export tools.**
 
 References: https://aws.amazon.com/dynamodb/getting-started/
-## Lambda Function:
 
- Lambda is a compute service that lets you run code without provisioning or managing servers. Lambda runs your code on a high-availability compute infrastructure and performs all of the administration of the compute resources, including server and operating system maintenance, capacity provisioning and automatic scaling, code monitoring and logging. With Lambda, you can run code for virtually any type of application or backend service.
+##  Designing DynamoDB table:
+
+DynamoDB is a schema-less database that only requires a table name and a primary key when creating the table. As a NoSQL database, its design changes from a typical relational database where for example we can use Joins operations. In this NoSQL approach we should know first the queries that we would like to implement. In our case, we want to query per profile with all skills inside it, list all profiles with their skills and query per skill with all profiles that have that skill. 
+With all these things in mind we are going to use a **single table** design to take advantages of DynamoDB features. The main benefit of using a single table in DynamoDB is to retrieve multiple, heterogenous item types using a single request. We will use a Primary Key (ProfileID) and a Sort Key (ID).
+
+Our "SkillProfile" table looks like:
+![image](https://user-images.githubusercontent.com/100789868/164500243-ea986220-3eea-4d68-aa06-93bbf16fbb68.png)
+In this picture we can see a profile and a skill in the same table. The skill got the ProfileID and the ID of the skill while the profile has got the same ProfileID and ID.
+
+In order to accomplish the query per skill, we need to set up a global secondary index on ID.
+
+https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/bp-general-nosql-design.html#bp-general-nosql-design-concepts
+
+## Configuration:
+
+Configure that it has auto scalling. To improve reading and writing.
+
+The **read/write** capacity mode controls how you are charged for read and write performance and how you manage capacity.
+
+| |  READ  |  WRITE|
+|--|--|--|
+| Auto Scaling:| Activated| Activated |
+|Provisioned Capacity Units: |1| 1|
+|Provisioned interval:| 1-20|1-20|
+|Capacity Utilization Target:| 70%| 70%|
+
+
+
+
+
+#  Lambda Function:
+
+> Lambda is a compute service that lets you run code without
+> provisioning or managing servers. Lambda runs your code on a
+> high-availability compute infrastructure and performs all of the
+> administration of the compute resources, including server and
+> operating system maintenance, capacity provisioning and automatic
+> scaling, code monitoring and logging. With Lambda, you can run code
+> for virtually any type of application or backend service.
 
 Reference: https://docs.aws.amazon.com/lambda/latest/dg/lambda-python.html
 
-## Creation Lambda Function.
+##  Creation Lambda Function.
 
 Now we create the lambda function to treat the Xlsm file to Json. Once the operation is done we have to select which columns of data we need to import them correctly in our table in DynamoDB.
 
@@ -57,79 +84,76 @@ From this link we can access the repository with the code: https://github.com/pa
 
 Now let´s reviews the code of the lambda functions
 
->import boto3
-import json
-import urllib.parse
-from collections import OrderedDict
-from itertools import islice
-from openpyxl import load_workbook**
-
-
->def lambda_handler(event, context):
-
-
-### Part 1:
-
-  Connect to S3 and download the EXCEL file (to /tmp/ in Lambda)
-           
-           s3_client = boto3.client("s3")
-	 S3_BUCKET_NAME = 'skillprofilebucket'
-    object_key = urllib.parse.unquote_plus(event['Records'][0]['s3']['object']['key'], encoding='utf-8') 
-	   file_content = s3_client.download_file(S3_BUCKET_NAME, object_key,'/tmp/data.xlsm')
-
-### Part 2:
- Parse data from EXCEL file to Python list using openpyxl
-
-    wb = load_workbook('/tmp/data.xlsm')
+    import boto3
+    import json
+    import urllib.parse
+    from collections import OrderedDict
+    from itertools import islice
+    from openpyxl import load_workbook**
     
-    sheet1 = wb['Mapping SSP']  #Sheet with Profiles' info
-    
-    profile_list = []
-    diccionario = {}
-    
-    for row in islice(sheet1.values, 3, (sheet1.max_row)-1):
-        profile = OrderedDict()
-        profile['ProfileID'] = row[1]
-        profile['ID'] = row[1]
-        profile['Name'] = row[2]
-        profile['Family'] = row[16]
-        profile['Cluster'] = row[17]
-        profile['Description'] = row[4]
-        profile_list.append(profile)
-        diccionario[row[2].upper()]=row[1]
-    
-    
-    sheet2 = wb['Skill Profiles']   #Sheet with Skills' info
-    
-    skill_list = []
-    
-    for row in islice(sheet2.values, 11, (sheet2.max_row)-1):
-        skill = OrderedDict()
-        skill['ProfileID'] = diccionario[row[4].upper()]
-        skill['ID'] = row[5]
-        skill['Category'] = row[6]
-        skill['SkillName'] = row[9]
-        skill['Description'] = row[10]
-        Levels = OrderedDict()
-        Levels['Junior'] = row[11]
-        Levels['Specialist'] = row[12]
-        Levels['Expert'] = row[13]
-        Levels['Senior'] = row[14]
-        Levels['Principal'] = row[15]
-        skill['Levels']=Levels
-        skill_list.append(skill)
 
-### Part 3:
+###  Part 1:
+
+Connect to S3 and download the EXCEL file (to /tmp/ in Lambda)
+
+    def lambda_handler(event, context):
+	    s3_client = boto3.client("s3")
+	    S3_BUCKET_NAME = 'skillprofilebucket'
+	    object_key = urllib.parse.unquote_plus(event['Records'][0]['s3']['object']['key'], encoding='utf-8')
+    
+	    file_content = s3_client.download_file(S3_BUCKET_NAME, object_key,'/tmp/data.xlsm')
+
+###  Part 2:
+
+Parse data from EXCEL file to Python list using openpyxl
+
+	    wb = load_workbook('/tmp/data.xlsm')
+	    
+	    sheet1 = wb['Mapping SSP'] #Sheet with Profiles' info
+	    profile_list = []
+	    diccionario = {}
+	    
+	    for row in islice(sheet1.values, 3, (sheet1.max_row)-1):
+		    profile = OrderedDict()
+		    profile['ProfileID'] = row[1]
+		    profile['ID'] = row[1]
+		    profile['Name'] = row[2]
+		    profile['Family'] = row[16]
+		    profile['Cluster'] = row[17]
+		    profile['Description'] = row[4]
+		    profile_list.append(profile)
+		    diccionario[row[2].upper()]=row[1]
+		    
+	    sheet2 = wb['Skill Profiles'] #Sheet with Skills' info
+	    skill_list = []
+	    
+	    for row in islice(sheet2.values, 11, (sheet2.max_row)-1):
+		    skill = OrderedDict()
+		    skill['ProfileID'] = diccionario[row[4].upper()]
+		    skill['ID'] = row[5]
+		    skill['Category'] = row[6]
+		    skill['SkillName'] = row[9]
+		    skill['Description'] = row[10]
+		    Levels = OrderedDict()
+		    Levels['Junior'] = row[11]
+		    Levels['Specialist'] = row[12]
+		    Levels['Expert'] = row[13]
+		    Levels['Senior'] = row[14]
+		    Levels['Principal'] = row[15]
+		    skill['Levels']=Levels
+		    skill_list.append(skill)
+		    
+
+###  Part 3:
+
 Connect to DynamoDB and upload the data to the table
- 
-    dynamodb = boto3.resource('dynamodb', region_name='eu-west-1')
-    table = dynamodb.Table('SkillProfile')
-    
-    for profile in profile_list:
-        table.put_item(Item=profile)
-    for skill in skill_list:
-        table.put_item(Item=skill)
 
+	    dynamodb = boto3.resource('dynamodb', region_name='eu-west-1')
+	    table = dynamodb.Table('SkillProfile')
+	    for profile in profile_list:
+	    table.put_item(Item=profile)
+	    for skill in skill_list:
+	    table.put_item(Item=skill)
 
 # Appsync
 Appsync is the AWS service that allows to develop GraphQL APIs (link to graphql explanation) and host them in a serverless way.

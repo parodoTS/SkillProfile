@@ -4,7 +4,7 @@
 SkillProfile+GraphQL(Appsync+Dynamo)
 
 ![SkillProfile drawio](https://user-images.githubusercontent.com/100789868/164406013-a1cbf3a1-95ae-4d21-88a7-65a1ac9f671d.png)
-![image](https://user-images.githubusercontent.com/100789868/164489284-6b5616fc-d7f2-42f6-996d-48ebcb75b8a1.png)
+![image](https://user-images.githubusercontent.com/100789868/164490988-abc092fa-631b-476e-acb7-66855d832474.png)
 ![image](https://user-images.githubusercontent.com/100789868/164490558-b0e0c5a6-4457-43b1-a0df-24e2d406dae0.png)
 
 

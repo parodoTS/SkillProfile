@@ -4,6 +4,8 @@
 SkillProfile+GraphQL(Appsync+Dynamo)
 
 ![SkillProfile drawio](https://user-images.githubusercontent.com/100789868/164406013-a1cbf3a1-95ae-4d21-88a7-65a1ac9f671d.png)
+![image](https://user-images.githubusercontent.com/100789868/164489284-6b5616fc-d7f2-42f6-996d-48ebcb75b8a1.png)
+
 # SkillProfile+GraphQL(Appsync+Dynamo)
 ### DynamoDB:
 Amazon DynamoDB is a fully managed, serverless, key-value NoSQL database designed to run high-performance applications at any scale. **DynamoDB offers built-in security, continuous backups, automated multi-Region replication, in-memory caching, and data export tools.**

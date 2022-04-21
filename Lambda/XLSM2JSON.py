@@ -10,7 +10,7 @@ def lambda_handler(event, context):
     #  PART 1: Connect to S3 and download the EXCEL file (to /tmp/ in Lambda)
     
     s3_client = boto3.client("s3")
-    S3_BUCKET_NAME = 'pcmt25-pipe'  #'skillprofilebucket'
+    S3_BUCKET_NAME = 'skillprofilebucket'
     object_key = "Copia de 2022-02-17_Skillprofil_Matrix_V4.7_YAM.xlsm"  
     
     file_content = s3_client.download_file(S3_BUCKET_NAME, object_key,'/tmp/data.xlsm')

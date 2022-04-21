@@ -1,7 +1,7 @@
 #set($expression="#ProfileID = :ProfileID")
 #set($expressionNames={"#ProfileID": "ProfileID"})
 #set($expressionValues={":ProfileID" : $util.dynamodb.toDynamoDB($ctx.args.ProfileID)})
-## if the selectionSetList does not contain the items, we fetch only the order
+## if the selectionSetList does not contain the skills, we fetch only the profile
 #if(!$ctx.info.selectionSetList.contains("skills"))
   #set($expression=$expression + " and #ID = :ID")
   $util.qr($expressionNames.put("#ID", "ID"))

@@ -32,6 +32,7 @@ After zipping the packages it will have the name “lambda-layer.zip”
 
 You can upload the zip file to your lambda layer AWS web Console, following the next steps provided by [AWS documentation](https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html):
 
+## Step 5
 **To create a layer (console)**
 
 1.  Open the  Layers page of the Lambda console.

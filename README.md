@@ -13,7 +13,7 @@ In this project we are going to implement a GraphQL API to query data from an EX
 
 >All this implementation has been build up trying to get advantage of a serverless architecture
 # Data
-We will start disscussing briefly the EXCEL file containing the data. This file got the ".xlsm" extension and it is composed of some sheets, each one with different data entities all about job profiles, the neccesary skills for each one, and the levels of kwoledge on these skills to reach a category (Junior, Senior...) on that specific profile.
+We will start disscussing briefly the EXCEL file containing the data. This file is a ".xlsm" extension file and it is composed of some sheets, each one with different data entities all about job profiles, the neccesary skills for each one, and the levels of kwoledge on these skills to reach a category (Junior, Senior...) on that specific profile.
 
 It looks like:
 

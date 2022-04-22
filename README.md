@@ -256,10 +256,10 @@ In the response template we need to reorganize our response data to match the sc
         #else
           #if($item.ID != $item.ProfileID)
             $util.qr($profile.skills.add($item))
+          #end
         #end
       #end
-    #end
-    $utils.toJson($profile)
+      $utils.toJson($profile)
     #end
 We iterate through the items in the response and if they are skills (ID different from ProfileID) we add them to the profile.
 
@@ -314,7 +314,7 @@ We iterate through the items in the response and if they are skills (ID differen
   First, in the request template, we check if some filter were used, in that case we add to the filter the expression that allows skills to be retrieve too (OR "is a skill").
 
     #if($context.args.filter)
-    #set($variable=$util.parseJson($util.transform.toDynamoDBFilterExpression($ctx.args.filter)))
+      #set($variable=$util.parseJson($util.transform.toDynamoDBFilterExpression($ctx.args.filter)))
       #set($variable.expression = $variable.expression + " or NOT contains(#ID, :ID)" )
       $util.qr($variable.expressionNames.put("#ID", "ID"))
       $util.qr($variable.expressionValues.put(":ID",{"S":"-"}))

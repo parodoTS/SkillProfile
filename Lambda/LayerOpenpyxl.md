@@ -25,7 +25,7 @@ Next, create a folder structure for the modules that you need to install:
 
 Let’s install our libraries. To install just a single module for your application, use the following command, in this example I’ll be using numpy.
 
-pip3 install openpyxl --target aws-layer/python/lib/python3.7/site-packages
+    pip3 install openpyxl --target aws-layer/python/lib/python3.7/site-packages
 
 ## Step 4
 

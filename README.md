@@ -50,8 +50,6 @@ In this picture we can see a profile and a skill in the same table. The skill go
 
 In order to accomplish the query per skill, we need to set up a global secondary index on ID.
 
-https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/bp-general-nosql-design.html#bp-general-nosql-design-concepts
-
 ## Configuration:
 
 We have set up the table using autoscaling to improve reading and writing operations. The **read/write** capacity mode controls how you are charged for read and write performance and how you manage capacity.

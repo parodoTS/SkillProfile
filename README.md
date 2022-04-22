@@ -42,7 +42,7 @@ DynamoDB is a schema-less database that only requires a table name and a primary
  -  "list all profiles with their skills" and  
  - "query per skill with all profiles that have that skill".
  
-With all these things in mind we are going to use a **single table** design to take advantages of DynamoDB features. The main benefit of using a single table in DynamoDB is to retrieve multiple, heterogenous item types using a single request. We will use a Primary Key (ProfileID) and a Sort Key (ID).
+[With all these things in mind](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/bp-general-nosql-design.html#bp-general-nosql-design-concepts) we are going to use a **single table** design to take advantages of DynamoDB features. The main benefit of using a single table in DynamoDB is to retrieve multiple, heterogenous item types using a single request. We will use a Primary Key (ProfileID) and a Sort Key (ID).
 
 Our "SkillProfile" table looks like:
 ![image](https://user-images.githubusercontent.com/100789868/164500243-ea986220-3eea-4d68-aa06-93bbf16fbb68.png)

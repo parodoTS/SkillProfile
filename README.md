@@ -46,7 +46,7 @@ With all these things in mind we are going to use a **single table** design to t
 
 Our "SkillProfile" table looks like:
 ![image](https://user-images.githubusercontent.com/100789868/164500243-ea986220-3eea-4d68-aa06-93bbf16fbb68.png)
-In this picture we can see a profile and a skill in the same table. The skill got the ProfileID and the ID of the skill while the profile has got the same ProfileID and ID.
+In this picture we can see a profile and a skill in the same table. The skill got the ProfileID and the ID of the skill while the profile has got the same ProfileID and ID. Those fields that only exit in one datatype are missing for the other datatype (sparse index).
 
 In order to accomplish the query per skill, we need to set up a global secondary index on ID.
 

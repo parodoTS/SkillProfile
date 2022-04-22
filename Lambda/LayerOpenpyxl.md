@@ -1,8 +1,8 @@
-# Creating and using lambda layers
+# Openpyxl Layer for Lambda functions
 
 Lambda layers provide a convenient way to package libraries and other dependencies that you can use with your Lambda functions. Using layers reduces the size of uploaded deployment archives and makes it faster to deploy your code.
 
-
+These are the steps followed to create an Openpyxl layer for a Python 3.8 Lambda function:
 
 ## Step 1
 

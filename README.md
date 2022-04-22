@@ -266,42 +266,43 @@ We iterate through the items in the response and if they are skills (ID differen
 **Example:**
 				**Query**	            
 	            
-	       query MyQuery2 {  getProfile(ProfileID: "00089-00") {
-    Cluster
-    Family
-    skills {
-      Levels {
-        Junior
-        Principal
-      }
-      SkillName
-      ID
-      ProfileID
-    }
-    Name
-    ProfileID  }}
+	query MyQuery2 {  getProfile(ProfileID: "00089-00") {
+	    Cluster
+	    Family
+	    skills {
+	      Levels {
+		Junior
+		Principal
+	      }
+	      SkillName
+	      ID
+	      ProfileID
+	    }
+	    Name
+	    ProfileID  
+	   }}
 
 **Response**
 
      { "data": {
-    "getProfile": {
-      "Cluster": "POQ",
-      "Family": "CF",
-      "skills": [
-        {
-          "Levels": {
-            "Junior": 0,
-            "Principal": 3
-          },
-          "SkillName": "English",
-          "ID": "LANG_0018",
-          "ProfileID": "00089-00"
-        },
-        {
-          "Levels": {
-            "Junior": 0,
-            "Principal": 3
-          }, ........     
+	    "getProfile": {
+	      "Cluster": "POQ",
+	      "Family": "CF",
+	      "skills": [
+		{
+		  "Levels": {
+		    "Junior": 0,
+		    "Principal": 3
+		  },
+		  "SkillName": "English",
+		  "ID": "LANG_0018",
+		  "ProfileID": "00089-00"
+		},
+		{
+		  "Levels": {
+		    "Junior": 0,
+		    "Principal": 3
+		  }, ........     
           ......
           ....
           ...
@@ -328,43 +329,43 @@ In the response template we reorganize the data in a similar way as in the getPr
 **Query**
 
 	query MyQuery2 {  listProfiles(filter: {Family: {eq: "CF"}}) {
-    items {
-      Family
-      Name
-      ProfileID
-      skills {
-        Category
-        ID
-        Levels {
-          Expert
-        }
-      }
-    } }}
+	    items {
+	      Family
+	      Name
+	      ProfileID
+	      skills {
+		Category
+		ID
+		Levels {
+		  Expert
+		}
+	      }
+	    } }}
 **Response**
 
 
 	  "data": {
-    "listProfiles": {
-      "items": [
-        {
-          "Family": "CF",
-          "Name": "Process Manager",
-          "ProfileID": "00089-00",
-          "skills": [
-            {
-              "Category": "Languages",
-              "ID": "LANG_0018",
-              "Levels": {
-                "Expert": 3
-              }
-            },
-            {
-              "Category": "Professional",
-              "ID": "SKILL_00020",
-              "Levels": {
-                "Expert": 1
-              }
-            }, .........
+	    "listProfiles": {
+	      "items": [
+		{
+		  "Family": "CF",
+		  "Name": "Process Manager",
+		  "ProfileID": "00089-00",
+		  "skills": [
+		    {
+		      "Category": "Languages",
+		      "ID": "LANG_0018",
+		      "Levels": {
+			"Expert": 3
+		      }
+		    },
+		    {
+		      "Category": "Professional",
+		      "ID": "SKILL_00020",
+		      "Levels": {
+			"Expert": 1
+		      }
+		    }, .........
             ..........
             ......
             ..
@@ -401,44 +402,44 @@ The pipeline also have an after mapping template in which we add the nextToken f
 **Query**
 
 	query MyQuery2 { getSkill(ID: "SKILL_00504") {
-    Category
-    Description
-    SkillName
-    profiles {
-      Levels {
-        Junior
-        Principal
-      }
-      Name
-    }}}
+	    Category
+	    Description
+	    SkillName
+	    profiles {
+	      Levels {
+		Junior
+		Principal
+	      }
+	      Name
+	    }}}
 
   **Response**
 
 	{"data": {
-    "getSkill": {
-      "Category": "Professional",
-      "Description": "Knowledge and skills to use the configuration techniques, tools and processes.",
-      "SkillName": "Configuration management",
-      "profiles": [
-        {
-          "Levels": {
-            "Junior": 2,
-            "Principal": 0
-          },
-          "Name": "Transition & Implementation Manager"
-        },
-        {
-          "Levels": {
-            "Junior": 0,
-            "Principal": 0
-          },
-          "Name": "Security Operator"
-        },
-        {
-          "Levels": {
-            "Junior": 0,
-            "Principal": 0
-          }, .......
+	    "getSkill": {
+	      "Category": "Professional",
+	      "Description": "Knowledge and skills to use the configuration techniques, tools and processes.",
+	      "SkillName": "Configuration management",
+	      "profiles": [
+		{
+		  "Levels": {
+		    "Junior": 2,
+		    "Principal": 0
+		  },
+		  "Name": "Transition & Implementation Manager"
+		},
+		{
+		  "Levels": {
+		    "Junior": 0,
+		    "Principal": 0
+		  },
+		  "Name": "Security Operator"
+		},
+		{
+		  "Levels": {
+		    "Junior": 0,
+		    "Principal": 0
+		  }, .......
           .......
           .....
           ...

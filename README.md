@@ -77,9 +77,9 @@ We have set up the table using autoscaling to improve reading and writing operat
 Reference: https://docs.aws.amazon.com/lambda/latest/dg/lambda-python.html
 
 Like we have said before, the Lambda function can be divided in three parts, first it will read the data from the file stored in S3, then parse the data inside it (to retrieve only relevant data), and finally load it into the DynamoDB.
-The function is written in Python 3.8, and we have configured a S3 trigger (PUT operation in our bucket, for all files with the sufix ".xlsm"), so every time we upload a file to the bucket with the .xlsm extension the fuction will run.
+The function is written in Python 3.8, and we have configured a **S3 trigger** (PUT operation in our bucket, for all files with the sufix ".xlsm"), so every time we upload a file to the bucket with the ".xlsm" extension the fuction will run.
 
-We also have created a Lambda Layer to allow the fuction to use the package "Openpyxl", which have been used to parse the EXCEL.
+We also have [created a Lambda Layer to allow the fuction to use the package "Openpyxl"](https://github.com/parodoTS/SkillProfile/blob/main/Lambda/LayerOpenpyxl.md), which have been used to parse the EXCEL.
 
 ##  Code:
 
@@ -93,7 +93,7 @@ Now let´s reviews the code of the lambda function. First of all we import the n
     from itertools import islice
     from openpyxl import load_workbook**
   
-  To be able to use "openpyxl" we have set up a Lambda Layer.
+  To be able to use "openpyxl" we have set up a [Lambda Layer](https://github.com/parodoTS/SkillProfile/blob/main/Lambda/LayerOpenpyxl.md).
 
 ###  Part 1:
 
@@ -112,7 +112,7 @@ Note that we are retrieving the file name ("object_key") directly from the event
 
 ###  Part 2:
 
-Once we have the file downloaded, we parse data from it to Python list using openpyxl as follows:
+Once we have the file downloaded, we parse its data to Python list using openpyxl as follows:
 
 	    wb = load_workbook('/tmp/data.xlsm')
 	    
@@ -150,7 +150,7 @@ Once we have the file downloaded, we parse data from it to Python list using ope
 		    skill['Levels']=Levels
 		    skill_list.append(skill)
 		    
-The profiles information is stored in a sheet called "Mapping SSP", while the skills information is the "Skill Profiles" sheet. The function iterates through the sheets (specifically in the cells where we know the data is; this means that if the data organization in the EXCEL file changes it would affect the implementation, WE SHOULD REWRITE THE FUCTION TO MAPP THE DATA AUTOMATYCALLY, FOR EXAMPLE READING THE COLUMNS NAME IN THE FILE), and map the data to the columns we are going to store in our database.
+The profiles information is stored in a sheet called "Mapping SSP", while the skills information is the "Skill Profiles" sheet. The function iterates through the sheets (specifically in the cells where we know the data is; this means that if the data organization in the EXCEL file changes it would affect the implementation, WE SHOULD REWRITE THE FUCTION TO MAP THE DATA AUTOMATYCALLY, FOR EXAMPLE READING THE COLUMNS NAME IN THE FILE), and maps the data to the columns we are going to use in our database.
 
 > In the database the skills records will have the ProfileID, while in
 > the file the skill sheet contains the Profile Name instead (as you can see [here](https://user-images.githubusercontent.com/100789868/164491226-c3dcb5e5-3f68-47db-840b-c0e9a9a9b0c4.png)),
@@ -173,8 +173,11 @@ Finally the fuction connects to DynamoDB and uploads the data to the table:
 # Appsync
 Appsync is the AWS service that allows to develop GraphQL APIs (link to graphql explanation) and host them in a serverless way.
 The first step once we know the queries we want to implement is to define a schema that will contains the data definition an also the operations (queries and mutations) that will be applied to them.
-Connection to DynamoDB as datasource using DynamoDB resolvers written in VTL.
-AppKey + cache
+
+Appsync allows to connect diferent services as datasource to the API, for this project we have set up our table in DynamoDB as datasource directly by using DynamoDB resolvers written in VTL.
+
+Appsync also provides some others configurations options, like cache for requests and some authentication methods. This options will be studied and tested later.
+
 ## Schema
 In this schema we have defined three basic data types that represent the entitties in our application.
 

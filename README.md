@@ -17,9 +17,9 @@ We will start disscussing briefly the EXCEL file containing the data. This file 
 
 It looks like:
 
-**Skills sheet:**
+### **Skills sheet:**
 ![image](https://user-images.githubusercontent.com/100789868/164491226-c3dcb5e5-3f68-47db-840b-c0e9a9a9b0c4.png)
-**Profiles sheet:**
+### **Profiles sheet:**
 ![image](https://user-images.githubusercontent.com/100789868/164490558-b0e0c5a6-4457-43b1-a0df-24e2d406dae0.png)
 
 We upload this EXCEL file without any modifications to a S3 bucket.

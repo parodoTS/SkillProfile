@@ -171,7 +171,7 @@ Finally the fuction connects to DynamoDB and uploads the data to the table:
 > Note that with this fuction we only upload, overwrite data to the database; we are not taking care of data previously stored in the database. If a new file is put to the S3 bucket, it will trigger the function and upload its data to the database. No deletions are implemented in this fuction.
 
 # Appsync
-Appsync is the AWS service that allows to develop GraphQL APIs (link to graphql explanation) and host them in a serverless way.
+Appsync is the AWS service that allows to develop GraphQL APIs (link to graphql explanation) and host them in a serverless way. GraphQL allows the client to specify the arguments to retrieve in the request (usefull to not overload the client/frontend).
 The first step once we know the queries we want to implement is to define a schema that will contains the data definition an also the operations (queries and mutations) that will be applied to them.
 
 Appsync allows to connect diferent services as datasource to the API, for this project we have set up our table in DynamoDB as datasource directly by using DynamoDB resolvers written in VTL.
@@ -179,7 +179,7 @@ Appsync allows to connect diferent services as datasource to the API, for this p
 Appsync also provides some others configurations options, like cache for requests and some authentication methods. This options will be studied and tested later.
 
 ## Schema
-In this schema we have defined three basic data types that represent the entitties in our application.
+In this [schema](https://github.com/parodoTS/SkillProfile/blob/main/AppSync/schema.graphql) we have defined three basic data types that represent the entitties in our application.
 
  -  **Profile:**
 ~~~
@@ -215,7 +215,7 @@ type Level {
 	Principal: Int
 }
 ~~~
-Level contains five fields, each one for each category; defined as Int.
+Level contains five fields, each one for each category; defined as Int. In our DynamoDb table Levels is a field inside each skill item, stored as a map.
 
 In the schema we also define the queries that will be allowed:
 ~~~
@@ -233,7 +233,7 @@ Three queries are allowed:
  3. getSkill in which we can ask a skill ID and it returns a skill and all profiles that have these skill with the levels asociated (we use another data type called SkillProfile which copy skill's field and add a field to include profiles, as the return type)
 
 ## Resolvers
-As we have said, we are using a single table DynamoDB as datasource, and the connection to it is implemented using resolvers written in VTL.
+As we have said, we are using a single table DynamoDB as datasource, and the connection to it is implemented using resolvers written in VTL. A resolver contains a request template and a reply template. For each query the [resolvers](https://github.com/parodoTS/SkillProfile/tree/main/AppSync/DynamoDBResolvers) are implemented as follows:
 
  ### 1. getProfile:
 This query has been implemented using DynamoDB Query method. Taking advantage of the single table design we can run this query using only one operation to the database. To return one profile and the skills asociated to it, we simply query using the ProfileID (PK, because we have stored our skills with this field pointing their profile). In order to not overfetch the response and get the skills if the client did not ask for them; in the request template we start by checking if the skills field were requested, if not we query for just the profile (adding the ID field to the query, which must be the same as the ProfileID for the profiles).

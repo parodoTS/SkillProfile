@@ -36,7 +36,12 @@ References: https://aws.amazon.com/dynamodb/getting-started/
 
 ##  Designing DynamoDB table:
 
-DynamoDB is a schema-less database that only requires a table name and a primary key when creating the table. As a NoSQL database, its design changes from a typical relational database where for example we can use Joins operations. In this NoSQL approach we should know first the queries that we would like to implement. In our case, we want to query per profile with all skills inside it, list all profiles with their skills and query per skill with all profiles that have that skill. 
+DynamoDB is a schema-less database that only requires a table name and a primary key when creating the table. As a NoSQL database, its design changes from a typical relational database where for example we can use Joins operations. In this NoSQL approach we should know first the queries that we would like to implement. In our case, we want:
+
+ - "query per profile with all skills inside it",  
+ -  "list all profiles with their skills" and  
+ - "query per skill with all profiles that have that skill".
+ 
 With all these things in mind we are going to use a **single table** design to take advantages of DynamoDB features. The main benefit of using a single table in DynamoDB is to retrieve multiple, heterogenous item types using a single request. We will use a Primary Key (ProfileID) and a Sort Key (ID).
 
 Our "SkillProfile" table looks like:

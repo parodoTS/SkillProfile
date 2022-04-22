@@ -49,22 +49,19 @@ https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/bp-general-nosq
 
 ## Configuration:
 
-Configure that it has auto scalling. To improve reading and writing.
+We have set up the table using autoscaling to improve reading and writing operations. The **read/write** capacity mode controls how you are charged for read and write performance and how you manage capacity.
 
-The **read/write** capacity mode controls how you are charged for read and write performance and how you manage capacity.
-
-| |  READ  |  WRITE|
-|--|--|--|
-| Auto Scaling:| Activated| Activated |
-|Provisioned Capacity Units: |1| 1|
-|Provisioned interval:| 1-20|1-20|
-|Capacity Utilization Target:| 70%| 70%|
+| |  Table READ  |  Table WRITE| ID-index READ | ID-index WRITE
+|--|--|--|--|--|
+| Auto Scaling:| Activated| Activated |Activated| Activated |
+|Provisioned interval:| 1-20|1-20| 1-20|1-20|
+|Capacity Utilization Target:| 70%| 70%|70%| 70%|
 
 
 
 
 
-#  Lambda Function:
+#  Lambda Function
 
 > Lambda is a compute service that lets you run code without
 > provisioning or managing servers. Lambda runs your code on a
@@ -76,25 +73,28 @@ The **read/write** capacity mode controls how you are charged for read and write
 
 Reference: https://docs.aws.amazon.com/lambda/latest/dg/lambda-python.html
 
-##  Creation Lambda Function.
+Like we have said before, the Lambda function can be divided in three parts, first it will read the data from the file stored in S3, then parse the data inside it (to retrieve only relevant data), and finally load it into the DynamoDB.
+The function is written in Python 3.8, and we have configured a S3 trigger (PUT operation in our bucket, for all files with the sufix ".xlsm"), so every time we upload a file to the bucket with the .xlsm extension the fuction will run.
 
-Now we create the lambda function to treat the Xlsm file to Json. Once the operation is done we have to select which columns of data we need to import them correctly in our table in DynamoDB.
+We also have created a Lambda Layer to allow the fuction to use the package "Openpyxl", which have been used to parse the EXCEL.
 
-From this link we can access the repository with the code: https://github.com/parodoTS/SkillProfile/blob/main/Lambda/XLSM2JSON.py
+##  Code:
 
-Now let´s reviews the code of the lambda functions
+[Full fuction available here](https://github.com/parodoTS/SkillProfile/blob/main/Lambda/XLSM2JSON.py)
+
+Now let´s reviews the code of the lambda function. First of all we import the neccesary packages (boto3 is the AWS SDK for Python):
 
     import boto3
-    import json
     import urllib.parse
     from collections import OrderedDict
     from itertools import islice
     from openpyxl import load_workbook**
-    
+  
+  To be able to use "openpyxl" we have set up a Lambda Layer.
 
 ###  Part 1:
 
-Connect to S3 and download the EXCEL file (to /tmp/ in Lambda)
+We connect to S3 and download the EXCEL file (to "/tmp/" in Lambda)
 
     def lambda_handler(event, context):
 	    s3_client = boto3.client("s3")
@@ -103,9 +103,13 @@ Connect to S3 and download the EXCEL file (to /tmp/ in Lambda)
     
 	    file_content = s3_client.download_file(S3_BUCKET_NAME, object_key,'/tmp/data.xlsm')
 
+Note that we are retrieving the file name ("object_key") directly from the event that have trigger the function (S3 Trigger), so we do not have to hardcode the name or worry about different names (for example differents versions).
+
+>  We could do the same for the bucket name if we want, but due to we only have one bucket in our implementation, we have decided to pass the name directly to show the simplest way of doing it.
+
 ###  Part 2:
 
-Parse data from EXCEL file to Python list using openpyxl
+Once we have the file downloaded, we parse data from it to Python list using openpyxl as follows:
 
 	    wb = load_workbook('/tmp/data.xlsm')
 	    
@@ -143,17 +147,25 @@ Parse data from EXCEL file to Python list using openpyxl
 		    skill['Levels']=Levels
 		    skill_list.append(skill)
 		    
+The profiles information is stored in a sheet called "Mapping SSP", while the skills information is the "Skill Profiles" sheet. The function iterates through the sheets (specifically in the cells where we know the data is; this means that if the data organization in the EXCEL file changes it would affect the implementation, WE SHOULD REWRITE THE FUCTION TO MAPP THE DATA AUTOMATYCALLY, FOR EXAMPLE READING THE COLUMNS NAME IN THE FILE), and map the data to the columns we are going to store in our database.
+
+> In the database the skills records will have the ProfileID, while in
+> the file the skill sheet contains the Profile Name instead (as you can see [here](https://user-images.githubusercontent.com/100789868/164491226-c3dcb5e5-3f68-47db-840b-c0e9a9a9b0c4.png)),
+> that is why we have use "diccionario" to map this two fields and
+> change their info.
 
 ###  Part 3:
 
-Connect to DynamoDB and upload the data to the table
+Finally the fuction connects to DynamoDB and uploads the data to the table:
 
 	    dynamodb = boto3.resource('dynamodb', region_name='eu-west-1')
 	    table = dynamodb.Table('SkillProfile')
 	    for profile in profile_list:
-	    table.put_item(Item=profile)
+		    table.put_item(Item=profile)
 	    for skill in skill_list:
-	    table.put_item(Item=skill)
+		    table.put_item(Item=skill)
+
+> Note that with this fuction we only upload, overwrite data to the database; we are not taking care of data previously stored in the database. If a new file is put to the S3 bucket, it will trigger the function and upload its data to the database. No deletions are implemented in this fuction.
 
 # Appsync
 Appsync is the AWS service that allows to develop GraphQL APIs (link to graphql explanation) and host them in a serverless way.

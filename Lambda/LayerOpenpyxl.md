@@ -2,11 +2,11 @@
 
 Lambda layers provide a convenient way to package libraries and other dependencies that you can use with your Lambda functions. Using layers reduces the size of uploaded deployment archives and makes it faster to deploy your code.
 
-These are the steps followed to create an Openpyxl layer for a Python 3.8 Lambda function:
+These are the steps followed to create an Openpyxl layer for a Python 3.8 Lambda function (using a Linux machine):
 
 ## Step 1
 
-Create a new directory and navigate to the directory on your computer:
+Create a new directory and navigate to it:
 
     mkdir my-lambda-layer && cd my-lambda-layer
 ## Step 2
@@ -16,7 +16,7 @@ Next, create a folder structure for the modules that you need to install:
     mkdir -p aws-layer/python/lib/python3.7/site-packages
 ## Step 3
 
-Let’s install our libraries. To install just a single module for your application, use the following command, in this example I’ll be using numpy.
+Let’s install our libraries.
 
     pip3 install openpyxl --target aws-layer/python/lib/python3.7/site-packages
 
@@ -30,10 +30,7 @@ Now zip the entire folder:
      zip -r9 lambda-layer.zip .
 After zipping the packages it will have the name “lambda-layer.zip”
 
-You can upload the zip file to your lambda layer using AWS CLI or using the AWS web Console, for this article I’ll be using the AWS CLI
-
-
-Reference: https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html
+You can upload the zip file to your lambda layer AWS web Console, following the next steps provided by [AWS documentation](https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html):
 
 **To create a layer (console)**
 

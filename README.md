@@ -461,12 +461,32 @@ In the AppSync we have also implemented the Mutation type with operation for cre
 
 
 ## Testing the API with Postman:
+In this section we are going to ilustrate the steps followed to import the API to Postman and test it.
 
+### Queries and Mutations (HTTP requests)
+
+First of all, we create a new API selecting the GraphQl as Schema Type (we are going to use GraphQL SDL as Schema format):
 ![Captura](https://user-images.githubusercontent.com/100789868/165068292-b548a185-943d-4e07-ac72-74b576e29af5.PNG)
+
+Next step is to paste our GraphQL schema in the definition tab. We also delete/comment the subcriptions definitions, because these operations use WebSocket instead of HTTP requests (consult LINK to check subcriptions testing using Postman):
+
 ![Captura2](https://user-images.githubusercontent.com/100789868/165068294-1e1a0a47-a68d-43ca-b00c-386d2df31da3.PNG)
+
+> Postman also allow to import the schema automatically by doing a request to the API asking also for the schema (GraphQL instrspection) as showed [here](https://blog.postman.com/introducing-automatic-schema-imports-for-graphql-requests/).
+
+Then we can select the "Generate Collection" and we choose the "Test the API" option:
+
 ![Captura3](https://user-images.githubusercontent.com/100789868/165068299-bb53b71c-2be4-4cca-b5c5-34984c5f125f.PNG)
+
+That would create automatically the operations we have defined in the schema and let us test each one. We can also configure the Authorization for all these operations, in this example we are using API Key (we should add a key "[x-api-key](https://docs.aws.amazon.com/appsync/latest/devguide/security-authz.html#api-key-authorization)" with its value to the Header of ours requests):
+
 ![Captura4](https://user-images.githubusercontent.com/100789868/165068300-41503e94-188d-46b5-bdfd-76f3aabfefb3.PNG)
+
+In the Body we can define ou query, selecting the fields we want the API to return, and we can also use variables to map params, for example:
+
 ![Captura5](https://user-images.githubusercontent.com/100789868/165068286-80ee3a8d-bf6b-426d-a5df-d141713bddcb.PNG)
+
+In the response Body we can see the data we have requested.
 
 # References
 

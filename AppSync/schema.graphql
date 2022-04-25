@@ -63,7 +63,6 @@ type Skill {
 type SkillProfile {
   Category: String
   Description: String
-  ID: String!
   SkillName: String!
   nextToken: String
   profiles: [ProfileSkill]
@@ -84,6 +83,10 @@ type Subscription {
 }
 
 input CreateProfileInput {
+  Cluster: String
+  Description: String
+  Family: String
+  Name: String!
   ProfileID: String!
 }
 

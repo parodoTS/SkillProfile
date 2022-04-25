@@ -15,3 +15,16 @@ https://docs.aws.amazon.com/appsync/latest/devguide/pipeline-resolvers.html
 https://docs.aws.amazon.com/appsync/latest/devguide/tutorial-dynamodb-resolvers.html
 
 https://docs.aws.amazon.com/es_es/lambda/latest/dg/with-s3-example.html
+
+
+APPSYNC + AUTHORITATION:
+
+https://docs.aws.amazon.com/appsync/latest/devguide/security-authz.html#api-key-authorization
+
+https://docs.aws.amazon.com/appsync/latest/devguide/security-authorization-use-cases.html
+
+https://docs.aws.amazon.com/appsync/latest/devguide/security-authorization-use-cases.html
+
+https://advancedweb.hu/appsync-cognito-directives/
+
+https://advancedweb.hu/how-to-use-cognito-with-appsync/

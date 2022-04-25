@@ -460,7 +460,7 @@ The pipeline also have an after mapping template in which we add the nextToken f
 In the AppSync we have also implemented the Mutation type with operation for create, update and delete for both profiles and skills; and also the Suscription type with operations linked to each mutations. Resolvers are set up too but they have not been weel tested (because the main purpose of the project focus just on querying data from an EXCEL file).
 
 
-## Testing the API with Postman:
+# Testing the API with Postman:
 In this section we are going to ilustrate the steps followed to import the API to Postman and test it.
 
 ### Queries and Mutations (HTTP requests)

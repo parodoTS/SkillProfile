@@ -1,6 +1,6 @@
 ## getBatchProfiles - request mapping
-#if($ctx.prev.result.profiles.size() == 0)
-    #return(["adios"])
+#if(!$ctx.prev.result.profiles)
+    #return($ctx.prev.result)
 #end
 #set($keys=[])
 #foreach($item in $ctx.prev.result.profiles)

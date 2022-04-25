@@ -4,9 +4,11 @@
 #else
   $util.qr($ctx.stash.put("nextToken", $ctx.result.nextToken))
   #set ($skill={})
-  $util.qr($skill.put("profiles",[]))
-  #foreach($item in $context.result.items)
-    $util.qr($skill.profiles.add($item))
+  #if($ctx.info.selectionSetList.contains("profiles"))
+    $util.qr($skill.put("profiles",[]))
+    #foreach($item in $context.result.items)
+      $util.qr($skill.profiles.add($item))
+    #end
   #end
   $util.qr($skill.put("Category",$context.result.items[0].Category))
   $util.qr($skill.put("Description",$context.result.items[0].Description))

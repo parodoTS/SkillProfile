@@ -460,6 +460,14 @@ The pipeline also have an after mapping template in which we add the nextToken f
 In the AppSync we have also implemented the Mutation type with operation for create, update and delete for both profiles and skills; and also the Suscription type with operations linked to each mutations. Resolvers are set up too but they have not been weel tested (because the main purpose of the project focus just on querying data from an EXCEL file).
 
 
+## Testing the API with Postman:
+
+![Captura](https://user-images.githubusercontent.com/100789868/165068292-b548a185-943d-4e07-ac72-74b576e29af5.PNG)
+![Captura2](https://user-images.githubusercontent.com/100789868/165068294-1e1a0a47-a68d-43ca-b00c-386d2df31da3.PNG)
+![Captura3](https://user-images.githubusercontent.com/100789868/165068299-bb53b71c-2be4-4cca-b5c5-34984c5f125f.PNG)
+![Captura4](https://user-images.githubusercontent.com/100789868/165068300-41503e94-188d-46b5-bdfd-76f3aabfefb3.PNG)
+![Captura5](https://user-images.githubusercontent.com/100789868/165068286-80ee3a8d-bf6b-426d-a5df-d141713bddcb.PNG)
+
 # References
 
 Some usefull resources and links can be checked [here](https://github.com/parodoTS/SkillProfile/blob/main/References)

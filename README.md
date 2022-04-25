@@ -375,7 +375,17 @@ In the response template we reorganize the data in a similar way as in the getPr
 This query operation differs from the previous ones because it uses two call to the databases, thats why instead of using directly one resolver, we build a Pipeline resolver composed of 2 functions (each one is like a single resolver that pass the results to the next one).
 
 The first function is **getProfilesWithSkill**, which make a first request using Query operation to retrieve all occurences of a skill. To accomplish that we set up a secondary index in DynamoDB on the field ID. 
+
+We have implemented an arguments check, so if the client does not request the profiles that got that skill, we only query 1 skill item (using limit=1) and in the second function we skip the DynamoDB opration (using a return) just to not overfetch.
+
+    #set( $limit = 100 )
+    ## if the selectionSetList does not contain the profiles, we fetch only the skill
+    #if(!$ctx.info.selectionSetList.contains("profiles"))
+      #set( $limit = 1 )
+    #end
+
 In the response template we reorganize the data but in this case the Skill request will be the parent entity that contains some Profiles (because of that in the schema we have defined a SkillProfile type with this fields). This data is passed to the next function in the pipeline.
+
 
 The second function is **getBatchProfiles**, which receives the ProfileID from all appearances of the skill requested and do a BatchGetItem (operation that allows us to retrieve more than one item in one database operation) to get all profiles.
 
@@ -388,7 +398,7 @@ The second function is **getBatchProfiles**, which receives the ProfileID from a
     #end
 
 We iterate through the previous result "$ctx.prev.result.profiles" and set the keys that will be in the query. 
-The BatchGetItem operation has a limitation of 100 items returned, so we need to implement pagination too using nextToken (also we have to be carefull with this limit and manage it in the previous function getProfilesWithSkill, we have set the default limit to 100).
+The BatchGetItem operation has a limitation of 100 items returned, so we need to implement pagination too using nextToken (also we have to be carefull with this limit and manage it in the previous function getProfilesWithSkill, that is why we have set the default limit to 100).
 
 In the response template we reorganize the data (adding the profile info requested).
 

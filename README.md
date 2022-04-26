@@ -469,6 +469,8 @@ In this section we are going to ilustrate the steps followed to import the API t
 
 First of all, we create a new API selecting the GraphQl as Schema Type (we are going to use GraphQL SDL as Schema format):
 ![Captura](https://user-images.githubusercontent.com/100789868/165068292-b548a185-943d-4e07-ac72-74b576e29af5.PNG)
+> We can also select "Import" and select our graphql schema, but for us this option only worked with the schema in json format (downloaded from AppSync console)
+
 
 Next step is to paste our GraphQL schema in the definition tab. We also delete/comment the subcriptions definitions, because these operations use WebSocket instead of HTTP requests (consult LINK to check subcriptions testing using Postman):
 

@@ -233,7 +233,9 @@ Three queries are allowed:
  3. getSkill in which we can ask a skill ID and it returns a skill and all profiles that have these skill with the levels asociated (we use another data type called SkillProfile which copy skill's field and add a field to include profiles, as the return type)
 
 ## Resolvers
-As we have said, we are using a single table DynamoDB as datasource, and the connection to it is implemented using resolvers written in VTL. A resolver contains a request template and a reply template. For each query the [resolvers](https://github.com/parodoTS/SkillProfile/tree/main/AppSync/DynamoDBResolvers) are implemented as follows:
+![resolvers drawio](https://user-images.githubusercontent.com/100789868/165249558-277b88e6-0cca-4c00-b518-52e5c5a7cb07.png)
+
+As we have said, we are using a single table DynamoDB as datasource, and the connection to it is implemented using resolvers written in VTL. A resolver contains a request template and a reply template. For each query we are going to use different DynamoDB operation to illustrate options we can use; the [resolvers](https://github.com/parodoTS/SkillProfile/tree/main/AppSync/DynamoDBResolvers) are implemented as follows:
 
  ### 1. getProfile:
 This query has been implemented using DynamoDB Query method. Taking advantage of the single table design we can run this query using only one operation to the database. To return one profile and the skills asociated to it, we simply query using the ProfileID (PK, because we have stored our skills with this field pointing their profile). In order to not overfetch the response and get the skills if the client did not ask for them; in the request template we start by checking if the skills field were requested, if not we query for just the profile (adding the ID field to the query, which must be the same as the ProfileID for the profiles).

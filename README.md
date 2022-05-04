@@ -176,7 +176,7 @@ The first step once we know the queries we want to implement is to define a sche
 
 Appsync allows to connect diferent services as datasource to the API, for this project we have set up our table in DynamoDB as datasource directly by using DynamoDB resolvers written in VTL.
 
-Appsync also provides some others configurations options, like cache for requests and some authentication methods. This options will be studied and tested later.
+Appsync also provides some others configurations options, like cache for requests and some authentication methods (you can check [here](https://github.com/parodoTS/PCMT25/tree/main/AppSync/Authentication) a test implementation).
 
 ## Schema
 In this [schema](https://github.com/parodoTS/SkillProfile/blob/main/AppSync/schema.graphql) we have defined three basic data types that represent the entitties in our application.

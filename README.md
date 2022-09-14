@@ -222,7 +222,6 @@ In the schema we also define the queries that will be allowed:
 type Query {
 	getProfile(ProfileID: String!): Profile
 	listProfiles(filter: TableProfileFilterInput, limit: Int, nextToken: String): ProfileConnection
-	ProfileConnection
 	getSkill(ID: String!, nextToken: String): SkillProfile
 }
 ~~~

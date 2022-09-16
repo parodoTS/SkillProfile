@@ -52,13 +52,7 @@ In order to accomplish the query per skill, we need to set up a global secondary
 
 ## Configuration:
 
-We have set up the table using autoscaling to improve reading and writing operations. The **read/write** capacity mode controls how you are charged for read and write performance and how you manage capacity.
-
-| |  Table READ  |  Table WRITE| ID-index READ | ID-index WRITE
-|--|--|--|--|--|
-| Auto Scaling:| Activated| Activated |Activated| Activated |
-|Provisioned interval:| 1-20|1-20| 1-20|1-20|
-|Capacity Utilization Target:| 70%| 70%|70%| 70%|
+We have set up the table using autoscaling to improve reading and writing operations. The capacity mode is set to "On-Demand"
 
 
 
@@ -490,6 +484,12 @@ In the Body we can define ou query, selecting the fields we want the API to retu
 ![Captura5](https://user-images.githubusercontent.com/100789868/165068286-80ee3a8d-bf6b-426d-a5df-d141713bddcb.PNG)
 
 In the response Body we can see the data we have requested.
+
+# IaC:
+
+We have include also de code to deploy the whole app (infra + logic) using [SST](https://sst.dev/) (Serverless Stack Framework) and the CDK (Typescript).
+
+Available [here](https://github.com/parodoTS/SkillProfile/tree/main/sst)
 
 # References
 

@@ -13,12 +13,12 @@ Create a new directory and navigate to it:
 
 Next, create a folder structure for the modules that you need to install:
 
-    mkdir -p aws-layer/python/lib/python3.7/site-packages
+    mkdir -p aws-layer/python/lib/python3.8/site-packages
 ## Step 3
 
 Let’s install our libraries.
 
-    pip3 install openpyxl --target aws-layer/python/lib/python3.7/site-packages
+    pip3 install openpyxl --target aws-layer/python/lib/python3.8/site-packages
 
 ## Step 4
 

@@ -59,7 +59,7 @@ def lambda_handler(event, context):
     
     #  PART 3: Connect to DynamoDB and upload the data to the table
     
-    dynamodb = boto3.resource('dynamodb', region_name='eu-west-1')
+    dynamodb = boto3.resource('dynamodb', region_name='us-west-2')
     table = dynamodb.Table('SkillProfile')
     
     for profile in profile_list:

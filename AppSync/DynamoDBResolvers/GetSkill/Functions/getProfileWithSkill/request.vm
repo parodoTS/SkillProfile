@@ -1,0 +1,22 @@
+## getProfilesWithSkill - request mapping
+#set( $limit = 100 )
+## if the selectionSetList does not contain the profiles, we fetch only the skill
+#if(!$ctx.info.selectionSetList.contains("profiles"))
+  #set( $limit = 1 )
+#end
+{
+  "version": "2018-05-29",
+  "operation": "Query",
+  "index":"ID-index",
+  "limit": $util.toJson($limit),
+  "nextToken": $util.toJson($ctx.args.nextToken),
+  "query" : {
+    "expression": "#ID = :ID",
+    "expressionNames" : {
+      "#ID": "ID"
+    },
+    "expressionValues" : {
+      ":ID": $util.dynamodb.toStringJson(${ctx.args.ID})
+    }
+  }
+}

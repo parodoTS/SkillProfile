@@ -1,0 +1,11 @@
+## getBatchProfiles - response mapping
+#if($context.result.data.SkillProfile.size() == 0)
+  $utils.error("NotFound", "NotFound");
+#else
+  #foreach($item in $ctx.result.data.SkillProfile)
+    $util.qr($ctx.prev.result.profiles[$foreach.index].put("Cluster", $item.Cluster))
+    $util.qr($ctx.prev.result.profiles[$foreach.index].put("Family", $item.Family))
+    $util.qr($ctx.prev.result.profiles[$foreach.index].put("Name", $item.Name))
+  #end
+  $util.toJson($ctx.prev.result)
+#end

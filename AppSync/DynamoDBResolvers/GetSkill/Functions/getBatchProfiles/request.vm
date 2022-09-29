@@ -1,0 +1,22 @@
+## getBatchProfiles - request mapping
+#if(!$ctx.prev.result.profiles)
+    #return($ctx.prev.result)
+#end
+#set($keys=[])
+#foreach($item in $ctx.prev.result.profiles)
+ #set($map = {})
+    $util.qr($map.put("ProfileID", $util.dynamodb.toString($item.ProfileID)))
+    $util.qr($map.put("ID", $util.dynamodb.toString($item.ProfileID)))
+    $util.qr($keys.add($map))
+#end
+
+{
+    "version": "2018-05-29",
+    "operation": "BatchGetItem",
+    "tables" : {
+        ## replace this with your table's name
+        "SkillProfile": {
+            "keys": $util.toJson($keys)
+        }
+    }
+}

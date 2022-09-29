@@ -1,0 +1,17 @@
+## getProfileWithSkill - response mapping
+#if($context.result.items.size() == 0)
+  $utils.error("NotFound", "NotFound");
+#else
+  $util.qr($ctx.stash.put("nextToken", $ctx.result.nextToken))
+  #set ($skill={})
+  #if($ctx.info.selectionSetList.contains("profiles"))
+    $util.qr($skill.put("profiles",[]))
+    #foreach($item in $context.result.items)
+      $util.qr($skill.profiles.add($item))
+    #end
+  #end
+  $util.qr($skill.put("Category",$context.result.items[0].Category))
+  $util.qr($skill.put("Description",$context.result.items[0].Description))
+  $util.qr($skill.put("SkillName",$context.result.items[0].SkillName))
+  $utils.toJson($skill)
+#end

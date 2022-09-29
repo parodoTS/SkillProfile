@@ -1,0 +1,30 @@
+Some usefull links:
+
+APPSYNC + DYNAMO + VTL RESOLVERS:
+
+https://catalog.us-east-1.prod.workshops.aws/workshops/67662c95-2007-4281-ae51-5313cd7caa67/en-US/
+
+https://docs.aws.amazon.com/es_es/appsync/latest/devguide/resolver-util-reference.html
+
+https://benoitboure.com/how-to-use-dynamodb-single-table-design-with-appsync
+
+https://benoitboure.com/how-to-handle-many-to-many-relations-in-appsync
+
+https://docs.aws.amazon.com/appsync/latest/devguide/resolver-mapping-template-reference-dynamodb.html#aws-appsync-resolver-mapping-template-reference-dynamodb-batch-get-item
+
+https://docs.aws.amazon.com/appsync/latest/devguide/pipeline-resolvers.html
+
+https://docs.aws.amazon.com/appsync/latest/devguide/tutorial-dynamodb-resolvers.html
+
+https://docs.aws.amazon.com/es_es/lambda/latest/dg/with-s3-example.html
+
+
+APPSYNC + AUTHORITATION:
+
+https://docs.aws.amazon.com/appsync/latest/devguide/security-authz.html#api-key-authorization
+
+https://docs.aws.amazon.com/appsync/latest/devguide/security-authorization-use-cases.html
+
+https://advancedweb.hu/appsync-cognito-directives/
+
+https://advancedweb.hu/how-to-use-cognito-with-appsync/

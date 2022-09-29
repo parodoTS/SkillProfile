@@ -1,0 +1,3 @@
+## getProfiles - after mapping
+$util.qr($ctx.result.put("nextToken", $ctx.stash.nextToken))
+$util.toJson($ctx.result)

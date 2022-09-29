@@ -1,0 +1,15 @@
+# dependencies
+sst/node_modules
+
+# lambda layer
+Lambda/my-lambda-layer/aws-layer/python
+
+# sst
+sst/.sst
+sst/.build
+
+# misc
+.DS_Store
+
+# local env files
+.env*.local

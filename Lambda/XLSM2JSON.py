@@ -5,13 +5,16 @@ from collections import OrderedDict
 from itertools import islice
 from openpyxl import load_workbook
 
+s3_client = boto3.client("s3")
+S3_BUCKET_NAME = 'skillprofilebucket'
+
+dynamodb = boto3.resource('dynamodb')
+table = dynamodb.Table('SkillProfile')
 
 def lambda_handler(event, context):
     
     #  PART 1: Connect to S3 and download the EXCEL file (to /tmp/ in Lambda)
-    
-    s3_client = boto3.client("s3")
-    S3_BUCKET_NAME = 'skillprofilebucket'
+   
     object_key = urllib.parse.unquote_plus(event['Records'][0]['s3']['object']['key'], encoding='utf-8') 
     
     file_content = s3_client.download_file(S3_BUCKET_NAME, object_key,'/tmp/data.xlsm')
@@ -58,9 +61,6 @@ def lambda_handler(event, context):
         skill_list.append(skill)
     
     #  PART 3: Connect to DynamoDB and upload the data to the table
-    
-    dynamodb = boto3.resource('dynamodb', region_name='us-west-2')
-    table = dynamodb.Table('SkillProfile')
     
     for profile in profile_list:
         table.put_item(Item=profile)
